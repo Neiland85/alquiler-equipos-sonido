@@ -1,0 +1,23 @@
+# Ignore all translation files
+*.xlf
+*.yml
+*.yaml
+*.php
+*.json
+
+# Ignore temporary and backup files
+*.bak
+*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore editor and IDE files
+.idea/
+*.swp
+*.swo
+
+# Allow exceptions by explicitly including specific files if needed
+# !important.en.xlf
+# !common.fr.yml
