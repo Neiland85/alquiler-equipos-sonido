@@ -1,12 +1,33 @@
 framework:
     notifier:
+        # Define transport services for chatter (e.g., Slack, Microsoft Teams)
         chatter_transports:
+            slack: '%env(SLACK_DSN)%'  # Example transport for Slack
+
+        # Define transport services for texter (e.g., SMS, Twilio)
         texter_transports:
+            twilio: '%env(TWILIO_DSN)%'  # Example transport for Twilio SMS
+
+        # Set the notification channel policy based on urgency
         channel_policy:
-            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
-            urgent: ['email']
-            high: ['email']
+            urgent: ['email', 'slack']
+            high: ['email', 'slack']
             medium: ['email']
             low: ['email']
+
+        # Define the recipients for admin notifications
         admin_recipients:
             - { email: admin@example.com }
+            - { email: support@example.com }  # Additional recipient
+
+        # Optionally, configure default sender information for notifications
+        default_sender:
+            address: '%env(DEFAULT_SENDER_EMAIL)%'
+            name: 'Alquiler Equipos Notification Service'
+
+        # Configure the retry strategy for notification delivery
+        retry_strategy:
+            max_retries: 3
+            delay: 1000  # Delay in milliseconds before retrying
+            multiplier: 2
+            max_delay: 30000  # Max delay of 30 seconds
