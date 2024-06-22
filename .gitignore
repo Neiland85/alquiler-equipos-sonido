@@ -1,0 +1,2 @@
+curl https://www.toptal.com/developers/gitignore/api/php,composer >> .gitignore
+
