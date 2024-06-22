@@ -1,17 +1,20 @@
 when@dev:
     web_profiler:
-        toolbar: true
-        intercept_redirects: false
+        toolbar: true  # Enable the web profiler toolbar in development
+        intercept_redirects: false  # Do not intercept redirects, keep them as is
 
     framework:
         profiler:
-            only_exceptions: false
-            collect_serializer_data: true
+            only_exceptions: false  # Collect profiler data for all requests, not just exceptions
+            collect_serializer_data: true  # Collect data related to the serializer component
+            collect_request_data: true  # Collect detailed request data for profiling
+            collect_cache_data: true  # Collect cache usage data
 
 when@test:
     web_profiler:
-        toolbar: false
-        intercept_redirects: false
+        toolbar: false  # Disable the web profiler toolbar in test environment
+        intercept_redirects: false  # Do not intercept redirects in test environment
 
     framework:
-        profiler: { collect: false }
+        profiler:
+            collect: false  # Do not collect profiler data in the test environment to speed up tests
