@@ -3,5 +3,20 @@ framework:
     translator:
         default_path: '%kernel.project_dir%/translations'
         fallbacks:
-            - en
+            - en  # Fallback to English if a translation is not found
+            - es  # Additional fallback to Spanish
+
+        # Optionally, define translation providers if you are using external services
         providers:
+            google_translate:
+                dsn: '%env(GOOGLE_TRANSLATE_DSN)%'  # Example for Google Translate
+                api_key: '%env(GOOGLE_TRANSLATE_API_KEY)%'
+            deepl:
+                dsn: '%env(DEEPL_DSN)%'  # Example for DeepL
+                api_key: '%env(DEEPL_API_KEY)%'
+
+        # Define the locales that your application supports
+        locales: ['en', 'es', 'fr']  # English, Spanish, French
+
+        # Enable or disable the debug mode for translations
+        debug: '%kernel.debug%'
