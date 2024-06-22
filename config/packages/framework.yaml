@@ -1,16 +1,34 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
-    #csrf_protection: true
+    
+    # Enable CSRF protection globally
+    csrf_protection: true
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        handler_id: null
+        cookie_secure: auto  # Ensure secure cookies are used if the application is served over HTTPS
+        cookie_samesite: 'lax'  # Define the SameSite policy for cookies
 
-    #esi: true
-    #fragments: true
+    # Enable ESI (Edge Side Includes) for HTTP caching and fragments
+    esi: true
+
+    # Enable the rendering of fragments in your templates
+    fragments: true
+
+    # Optional: Configure the HTTP cache
+    http_cache:
+        enabled: true
+        default_ttl: 3600  # Set default TTL for cached responses
+        private_headers: ['Authorization', 'Cookie']
+
+    # Optionally enable and configure the profiler
+    profiler:
+        only_exceptions: false  # Collect data for all requests, not just exceptions
 
 when@test:
     framework:
         test: true
         session:
-            storage_factory_id: session.storage.factory.mock_file
+            storage_factory_id: session.storage.factory.mock_file  # Use mock file storage for sessions in tests
