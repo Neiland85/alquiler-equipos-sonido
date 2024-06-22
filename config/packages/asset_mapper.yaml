@@ -3,3 +3,15 @@ framework:
         # The paths to make available to the asset mapper.
         paths:
             - assets/
+            - public/assets/  # Add public assets directory for additional resources
+
+        # Optionally, you can specify default asset versioning for cache busting
+        version: 'v1.0'  # Example version, update as needed
+
+        # You can also define custom asset patterns
+        patterns:
+            css: 'styles/**/*.css'
+            js: 'scripts/**/*.js'
+
+        # Optionally, configure the asset URL prefix if assets are served from a different host
+        # base_urls: 'https://cdn.example.com'
