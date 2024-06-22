@@ -1,3 +1,18 @@
 _security_logout:
     resource: security.route_loader.logout
     type: service
+
+_security_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+    methods: [GET, POST]
+
+_security_check:
+    path: /login_check
+    controller: App\Controller\SecurityController::check
+    methods: [POST]
+
+_security_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+    methods: [GET]
