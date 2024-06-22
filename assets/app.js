@@ -1,10 +1,23 @@
-import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
+// app.js
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// Import necessary modules and libraries
+import { Turbo } from "@hotwired/turbo"
+import { Application } from "@hotwired/stimulus"
+import { definitionsFromContext } from "@hotwired/stimulus-loading"
+
+// Initialize Turbo
+Turbo.start()
+
+// Initialize Stimulus
+const application = Application.start()
+const context = require.context("./controllers", true, /\.js$/)
+application.load(definitionsFromContext(context))
+
+// Import styles
+import "./styles/app.css"
+
+// Additional custom scripts
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('App is running!');
+    // Add your custom JavaScript code here
+});
