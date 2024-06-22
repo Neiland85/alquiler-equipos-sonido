@@ -1,0 +1,18 @@
+# Ignore all migration files
+*.php
+
+# Optionally, exclude specific migration files from being ignored
+# !Version20230606123000.php
+
+# Ignore temporary or backup files
+*.bak
+*.tmp
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore editor and IDE configuration files
+.idea/
+*.swp
+*.swo
