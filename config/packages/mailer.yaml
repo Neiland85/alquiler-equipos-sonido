@@ -1,3 +1,25 @@
 framework:
     mailer:
+        # The DSN (Data Source Name) for the mailer service
         dsn: '%env(MAILER_DSN)%'
+
+        # Optional: Configure the default sender address
+        default_sender:
+            address: '%env(DEFAULT_SENDER_EMAIL)%'
+            name: '%env(DEFAULT_SENDER_NAME)%'
+
+        # Optional: Enable asynchronous sending
+        async: false  # Set to true to enable async sending
+
+        # Optional: Configure the failed recipients logging
+        failure:
+            log_failed_recipients: true
+
+        # Optional: Set default transport options
+        transport_options:
+            tls: true  # Use TLS for secure email transport
+
+        # Optional: Add custom headers for all emails
+        headers:
+            X-Mailer: 'AlquilerEquiposMailer'
+            X-Priority: '1'  # Set email priority
