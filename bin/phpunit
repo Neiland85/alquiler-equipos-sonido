@@ -5,19 +5,23 @@ if (!ini_get('date.timezone')) {
     ini_set('date.timezone', 'UTC');
 }
 
-if (is_file(dirname(__DIR__).'/vendor/phpunit/phpunit/phpunit')) {
+$phpunitPath = dirname(__DIR__).'/vendor/phpunit/phpunit/phpunit';
+$simplePhpunitPath = dirname(__DIR__).'/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
+
+if (is_file($phpunitPath)) {
+    // For PHP 8.0 and above, use the PHPUnit directly
     if (PHP_VERSION_ID >= 80000) {
-        require dirname(__DIR__).'/vendor/phpunit/phpunit/phpunit';
+        require $phpunitPath;
     } else {
+        // Use the standard autoload for older PHP versions
         define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__).'/vendor/autoload.php');
         require PHPUNIT_COMPOSER_INSTALL;
         PHPUnit\TextUI\Command::main();
     }
+} elseif (is_file($simplePhpunitPath)) {
+    // Use Symfony's PHPUnit Bridge if available
+    require $simplePhpunitPath;
 } else {
-    if (!is_file(dirname(__DIR__).'/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php')) {
-        echo "Unable to find the `simple-phpunit.php` script in `vendor/symfony/phpunit-bridge/bin/`.\n";
-        exit(1);
-    }
-
-    require dirname(__DIR__).'/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
+    echo "Unable to find PHPUnit. Please run `composer require --dev phpunit/phpunit` or `composer require --dev symfony/phpunit-bridge`.\n";
+    exit(1);
 }
