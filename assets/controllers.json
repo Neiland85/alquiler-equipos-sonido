@@ -1,15 +1,12 @@
 {
-    "controllers": {
-        "@symfony/ux-turbo": {
-            "turbo-core": {
-                "enabled": true,
-                "fetch": "eager"
-            },
-            "mercure-turbo-stream": {
-                "enabled": false,
-                "fetch": "eager"
-            }
-        }
+  "controllers": {
+    "hello_controller": {
+      "file": "./controllers/hello_controller.js",
+      "description": "Basic Stimulus controller for greeting message"
     },
-    "entrypoints": []
+    "example_controller": {
+      "file": "./controllers/example_controller.js",
+      "description": "Example Stimulus controller for demonstrating functionality"
+    }
+  }
 }
