@@ -2,9 +2,17 @@ framework:
     router:
         # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
         # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
-        #default_uri: http://localhost
+        default_uri: '%env(DEFAULT_URL)%'
+
+        # Optionally set up the resource for routes, especially for API versioning or modular routing
+        resource: 'config/routes.yaml'
+
+        # Enable or disable the router cache to improve performance
+        cache_dir: '%kernel.cache_dir%/routing'
 
 when@prod:
     framework:
         router:
-            strict_requirements: null
+            strict_requirements: false  # Disable strict requirements for production
+            cache_dir: '%kernel.cache_dir%/routing_prod'  # Separate cache for production
+            resource: 'config/routes_prod.yaml'  # Use a different routing file for production
