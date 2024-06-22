@@ -1,6 +1,7 @@
 <?php
 
 namespace Container24gboxx;
+
 include_once \dirname(__DIR__, 4).'/vendor/symfony/http-kernel/Controller/ValueResolverInterface.php';
 include_once \dirname(__DIR__, 4).'/vendor/symfony/http-kernel/Controller/ArgumentResolver/RequestPayloadValueResolver.php';
 
@@ -16,6 +17,13 @@ class RequestPayloadValueResolverGhost01ca9cc extends \Symfony\Component\HttpKer
         'translator' => [parent::class, 'translator', parent::class],
         'validator' => [parent::class, 'validator', parent::class],
     ];
+
+    // Initialize the lazy properties
+    public function __construct(\Symfony\Component\Serializer\SerializerInterface $serializer = null, \Symfony\Component\Translation\TranslatorInterface $translator = null, \Symfony\Component\Validator\Validator\ValidatorInterface $validator = null)
+    {
+        $this->lazyObjectRealInstance ??= $this;
+        parent::__construct($serializer, $translator, $validator);
+    }
 }
 
 // Help opcache.preload discover always-needed symbols
