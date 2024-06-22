@@ -1,6 +1,32 @@
 doctrine_migrations:
     migrations_paths:
-        # namespace is arbitrary but should be different from App\Migrations
-        # as migrations classes should NOT be autoloaded
+        # Define namespace for migration classes, ensure it is not autoloaded
         'DoctrineMigrations': '%kernel.project_dir%/migrations'
-    enable_profiler: false
+
+    # Enables the profiler for migrations; set to true for more detailed debugging
+    enable_profiler: '%kernel.debug%'
+
+    # Optionally, you can set the table name for tracking migrations
+    # migrations_table_name: 'migration_versions'
+
+    # Define custom configurations for migrations
+    custom_template: '%kernel.project_dir%/src/Migrations/Template/Migration.tpl.php'
+
+    # Specify the version organization strategy
+    organize_migrations: 'year_and_month' # Other options: 'none', 'year', 'year_and_month'
+
+    # Automatically set the database connection to use
+    connection: default
+
+    # Specify a custom namespace for migrations if needed
+    namespaces: ['App\Migrations']
+
+    # Ensure the migration script paths are correctly defined
+    script_paths:
+        - '%kernel.project_dir%/migrations'
+        - '%kernel.project_dir%/custom_migrations'
+
+    # Optionally, set additional configurations for migrations
+    migrations:
+        - 'DoctrineMigrations\Version20230606123000'
+        - 'DoctrineMigrations\Version20230606123001'
