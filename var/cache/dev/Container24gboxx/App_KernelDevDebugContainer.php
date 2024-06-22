@@ -487,6 +487,4 @@ class App_KernelDevDebugContainer extends Container
             'console.command.ids' => [
 
             ],
-        ];
-    }
-}
+       
