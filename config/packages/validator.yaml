@@ -2,10 +2,29 @@ framework:
     validation:
         # Enables validator auto-mapping support.
         # For instance, basic validation constraints will be inferred from Doctrine's metadata.
-        #auto_mapping:
-        #    App\Entity\: []
+        auto_mapping:
+            App\Entity\:
+                - validate_property_annotations: true  # Enables validation based on property annotations
+
+        # Enable constraint violations to be returned in a structured format
+        enable_annotations: true  # Enables validation based on annotations in entity classes
+
+        # Define custom validation paths
+        mapping:
+            paths:
+                - '%kernel.project_dir%/config/validation'  # Custom path for validation configuration files
+
+        # Optionally, define groups for different validation scenarios
+        groups:
+            default: ['Default']
+            registration: ['Default', 'Registration']
+
+        # Configure the violation format and message templates
+        violation_format: 'array'  # Choose between 'array', 'json', etc.
+        violation_messages: 'messages'  # Use custom message templates if available
 
 when@test:
     framework:
         validation:
-            not_compromised_password: false
+            not_compromised_password: false  # Disable checking for compromised passwords during tests
+            cache: false  # Disable validation cache in test environment
