@@ -1,0 +1,21 @@
+# Ignore all backup and temporary files
+*.bak
+*.tmp
+
+# Ignore specific editor and IDE files
+.idea/
+*.swp
+*.swo
+
+# Ignore log files
+*.log
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore compiled PHP files and cache
+*.php~
+
+# Ignore ORM generated proxy classes
+Proxies/
