@@ -12,3 +12,10 @@ composer.phar
 #!! ERROR: php is undefined. Use list command to see defined gitignore types !!#
 
 # End of https://www.toptal.com/developers/gitignore/api/php,composer
+
+# Ignore local environment file
+.env.local
+
+# Ignore cache directories
+var/cache/
+
