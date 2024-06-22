@@ -1,6 +1,25 @@
 twig:
-    file_name_pattern: '*.twig'
+    default_path: '%kernel.project_dir%/templates'  # Default path for Twig templates
+    file_name_pattern: '*.twig'  # Pattern to match Twig files
+    debug: '%kernel.debug%'  # Enable debug mode based on kernel debug setting
+    strict_variables: '%kernel.debug%'  # Enable strict variable checks in debug mode
+
+    # Configure global variables accessible in all templates
+    globals:
+        app_name: 'Alquiler Equipos Sonido'
+        app_version: '1.0.0'
+
+    # Set the cache directory for compiled Twig templates
+    cache: '%kernel.cache_dir%/twig'
+
+    # Configure paths for additional template directories
+    paths:
+        '%kernel.project_dir%/vendor/symfony/twig-bridge/Resources/views/Form': Form
+
+    # Optionally, enable auto-reload for templates in development
+    auto_reload: '%kernel.debug%'
 
 when@test:
     twig:
-        strict_variables: true
+        strict_variables: true  # Enforce strict variable checks in test environment
+        cache: false  # Disable caching for Twig templates during tests
