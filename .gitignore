@@ -1,2 +1,3 @@
 curl https://www.toptal.com/developers/gitignore/api/php,composer >> .gitignore
 
+.DS_Store
