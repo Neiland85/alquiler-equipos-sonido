@@ -1,52 +1,59 @@
+# Doctrine configuration for Symfony
+
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
 
         # Configure your server version here or in the DATABASE_URL environment variable (see .env file)
-        # server_version: '16'
+        # server_version: '16'  # Ensure to set this if your DB server requires it.
 
         profiling_collect_backtrace: '%kernel.debug%'
-        use_savepoints: true
+        use_savepoints: true  # Use savepoints for nested transactions.
 
     orm:
-        auto_generate_proxy_classes: true
-        enable_lazy_ghost_objects: true
-        report_fields_where_declared: true
-        validate_xml_mapping: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
+        auto_generate_proxy_classes: true  # Automatically generate proxy classes for lazy loading.
+        enable_lazy_ghost_objects: true  # Enable lazy loading for associated objects.
+        report_fields_where_declared: true  # Report fields where they are declared for clarity.
+        validate_xml_mapping: true  # Validate the XML mapping for entities.
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware  # Use underscore number aware naming strategy.
+        auto_mapping: true  # Automatically map entities to ORM.
+
         mappings:
             App:
-                type: attribute
+                type: attribute  # Use attributes for mapping entities.
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/Entity'  # Directory for entity classes.
+                prefix: 'App\Entity'  # Namespace prefix for entities.
+                alias: App  # Alias for the mapping configuration.
+
+        # Disable controller resolver auto-mapping for better control.
         controller_resolver:
             auto_mapping: false
 
+# Configuration specific to the test environment.
 when@test:
     doctrine:
         dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
+            # "TEST_TOKEN" is typically set by ParaTest to differentiate test databases.
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
+# Configuration specific to the production environment.
 when@prod:
     doctrine:
         orm:
-            auto_generate_proxy_classes: false
-            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            auto_generate_proxy_classes: false  # Disable auto-generation of proxy classes in production.
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'  # Directory for proxy classes.
             query_cache_driver:
                 type: pool
-                pool: doctrine.system_cache_pool
+                pool: doctrine.system_cache_pool  # Use system cache pool for query cache.
             result_cache_driver:
                 type: pool
-                pool: doctrine.result_cache_pool
+                pool: doctrine.result_cache_pool  # Use result cache pool for query results.
 
     framework:
         cache:
             pools:
                 doctrine.result_cache_pool:
-                    adapter: cache.app
+                    adapter: cache.app  # Use application cache for result cache.
                 doctrine.system_cache_pool:
-                    adapter: cache.system
+                    adapter: cache.system  # Use system cache for system-level caching.
