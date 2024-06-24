@@ -1,20 +1,25 @@
+# Configuration for application caching
+
 framework:
     cache:
         # Unique name of your app: used to compute stable namespaces for cache keys.
         prefix_seed: 'alquiler_equipos_sonido'
+        # The prefix_seed ensures that cache keys are unique and do not clash with other apps.
 
         # The "app" cache stores to the filesystem by default.
         # The data in this cache should persist between deploys.
         app: cache.adapter.filesystem
 
-        # Uncomment below to use Redis for cache storage.
+        # Use Redis for cache storage to enhance performance and scalability.
+        # Uncomment and configure the Redis provider if you have Redis installed.
         # app: cache.adapter.redis
         # default_redis_provider: 'redis://localhost'
 
-        # Uncomment below to use APCu for cache storage.
+        # Use APCu for cache storage if available, providing fast local caching.
+        # Uncomment the below line if APCu is installed and configured.
         # app: cache.adapter.apcu
 
-        # Namespaced pools use the above "app" backend by default.
+        # Configure named cache pools for specific caching needs.
         pools:
             # Example dedicated cache pool for a specific use case.
             my_dedicated_cache:
