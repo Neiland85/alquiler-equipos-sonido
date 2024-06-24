@@ -1,15 +1,21 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
+# Configuration for Symfony Framework
+# For more details, see: https://symfony.com/doc/current/reference/configuration/framework.html
+
 framework:
     secret: '%env(APP_SECRET)%'
-    
+    # Secret key for encrypting cookies and other sensitive data
+
     # Enable CSRF protection globally
     csrf_protection: true
 
-    # Note that the session will be started ONLY if you read or write from it.
+    # Session configuration
     session:
         handler_id: null
-        cookie_secure: auto  # Ensure secure cookies are used if the application is served over HTTPS
-        cookie_samesite: 'lax'  # Define the SameSite policy for cookies
+        cookie_secure: auto  # Secure cookies if the application is served over HTTPS
+        cookie_samesite: 'lax'  # Defines the SameSite policy for cookies
+        cookie_lifetime: 3600  # Optional: Set cookie lifetime to 1 hour
+        cookie_path: '/'  # Optional: Define the cookie path for better security
+        cookie_httponly: true  # Ensure cookies are not accessible via JavaScript for better security
 
     # Enable ESI (Edge Side Includes) for HTTP caching and fragments
     esi: true
@@ -17,15 +23,18 @@ framework:
     # Enable the rendering of fragments in your templates
     fragments: true
 
-    # Optional: Configure the HTTP cache
+    # HTTP Cache configuration
     http_cache:
         enabled: true
-        default_ttl: 3600  # Set default TTL for cached responses
+        default_ttl: 3600  # Default TTL for cached responses
         private_headers: ['Authorization', 'Cookie']
+        vary: ['Accept-Encoding']  # Optional: Specify HTTP headers that should cause the cache to vary
 
-    # Optionally enable and configure the profiler
+    # Profiler configuration
     profiler:
         only_exceptions: false  # Collect data for all requests, not just exceptions
+        collect: true  # Ensure that data is collected for each request
+        enabled: '%kernel.debug%'  # Enable profiler only in debug mode
 
 when@test:
     framework:
