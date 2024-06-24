@@ -1,0 +1,57 @@
+name: Symfony
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  symfony-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup PHP with automatic updates
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mbstring, pdo_sqlite
+          ini-values: post_max_size=256M, max_execution_time=180
+          coverage: none
+
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Copy .env.test.local if it does not exist
+      - name: Copy .env.test.local
+        run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+
+      # Cache Composer packages
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # Install dependencies
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+
+      # Create SQLite database
+      - name: Create Database
+        run: |
+          mkdir -p var
+          touch var/test.db
+
+      # Run PHPUnit tests
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        env:
+          DATABASE_URL: sqlite:///%kernel.project_dir%/var/test.db
+        run: vendor/bin/phpunit
