@@ -1,18 +1,23 @@
-_security_logout:
-    resource: security.route_loader.logout
-    type: service
+# Configuration for security-related routes
 
 _security_login:
     path: /login
     controller: App\Controller\SecurityController::login
     methods: [GET, POST]
+    # Route for handling user login.
+    # GET method to display the login form.
+    # POST method to process login submission.
 
 _security_check:
     path: /login_check
     controller: App\Controller\SecurityController::check
     methods: [POST]
+    # Route for processing login verification.
+    # Should be protected and handle POST requests only.
 
 _security_logout:
     path: /logout
     controller: App\Controller\SecurityController::logout
-    methods: [GET]
+    methods: [GET, POST]
+    # Route for handling user logout.
+    # Accepts GET and POST methods for flexibility.
