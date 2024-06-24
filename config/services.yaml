@@ -12,6 +12,7 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Services should be private by default to avoid exposing internal details.
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -23,13 +24,24 @@ services:
             - '../src/Kernel.php'
             - '../src/Migrations/'  # Exclude migrations directory
 
-    # Add additional service configurations here
+    # Explicitly define the services and their configurations
     App\Service\:
         resource: '../src/Service/'
-        tags: ['controller.service_arguments']  # Add custom services and tag them as needed
+        tags: ['controller.service_arguments']  # Tagging custom services for use in controllers
 
-    # Example of explicitly defined service
+    # Example of an explicitly defined service with arguments
     App\Service\Mailer:
         arguments:
             $defaultSender: '%env(DEFAULT_SENDER_EMAIL)%'
         tags: ['app.mailer']
+
+    # Example of adding a new service for logging
+    App\Service\Logger:
+        arguments:
+            $logFile: '%env(LOG_FILE_PATH)%'
+        tags: ['app.logger']
+
+    # Add additional custom service configurations here
+    App\Controller\:
+        resource: '../src/Controller/'
+        public: true
