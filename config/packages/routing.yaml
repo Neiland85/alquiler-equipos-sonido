@@ -1,18 +1,28 @@
+# Symfony Router configuration
+# For more details, see: https://symfony.com/doc/current/routing.html
+
 framework:
     router:
         # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
-        # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
         default_uri: '%env(DEFAULT_URL)%'
+        # Use the environment variable DEFAULT_URL to set the base URI.
 
         # Optionally set up the resource for routes, especially for API versioning or modular routing
         resource: 'config/routes.yaml'
+        # This points to the main routing configuration file for modular routing or API versioning.
 
         # Enable or disable the router cache to improve performance
         cache_dir: '%kernel.cache_dir%/routing'
+        # Specify a cache directory to improve routing performance by caching the routes.
 
 when@prod:
     framework:
         router:
-            strict_requirements: false  # Disable strict requirements for production
-            cache_dir: '%kernel.cache_dir%/routing_prod'  # Separate cache for production
-            resource: 'config/routes_prod.yaml'  # Use a different routing file for production
+            # Disable strict requirements for production to avoid issues with unexpected parameters.
+            strict_requirements: false
+            
+            # Use a separate cache directory for production for better cache management.
+            cache_dir: '%kernel.cache_dir%/routing_prod'
+            
+            # Use a different routing file for production to separate dev/test and production routes.
+            resource: 'config/routes_prod.yaml'
