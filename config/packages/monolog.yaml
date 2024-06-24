@@ -1,7 +1,11 @@
+# Monolog configuration for Symfony
+# For more details, see: https://symfony.com/doc/current/logging.html
+
 monolog:
     channels:
-        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - deprecation  # Log deprecations in a dedicated "deprecation" channel
 
+# Configuration for development environment
 when@dev:
     monolog:
         handlers:
@@ -10,16 +14,21 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 channels: ["!event"]
+                formatter: monolog.formatter.line  # Added formatter for consistent log format
+
             console:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine", "!console"]
+                formatter: monolog.formatter.line  # Optional: format console logs consistently
+
             browser:
                 type: browser_console
                 level: info
                 channels: ["!event"]
-                formatter: monolog.formatter.line
+                formatter: monolog.formatter.line  # Consistent formatting for browser console logs
 
+# Configuration for test environment
 when@test:
     monolog:
         handlers:
@@ -27,13 +36,15 @@ when@test:
                 type: fingers_crossed
                 action_level: error
                 handler: nested
-                excluded_http_codes: [404, 405]
+                excluded_http_codes: [404, 405]  # Exclude common HTTP errors
                 channels: ["!event"]
             nested:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
+                formatter: monolog.formatter.line  # Ensure test logs have consistent format
 
+# Configuration for production environment
 when@prod:
     monolog:
         handlers:
@@ -42,19 +53,23 @@ when@prod:
                 action_level: error
                 handler: nested
                 excluded_http_codes: [404, 405]
-                buffer_size: 50 # Prevent memory leaks by limiting the buffer size
+                buffer_size: 50  # Limit buffer size to prevent memory leaks
+
             nested:
                 type: stream
                 path: php://stderr
                 level: warning
-                formatter: monolog.formatter.json
+                formatter: monolog.formatter.json  # Use JSON format for better log aggregation and analysis
+
             console:
                 type: console
                 process_psr_3_messages: false
                 channels: ["!event", "!doctrine"]
+                formatter: monolog.formatter.json  # Consistent formatting for console logs
+
             deprecation:
                 type: stream
                 path: php://stderr
                 level: warning
                 channels: [deprecation]
-                formatter: monolog.formatter.json
+                formatter: monolog.formatter.json  # Use JSON format for deprecation logs
