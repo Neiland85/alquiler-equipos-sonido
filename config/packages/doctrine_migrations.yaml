@@ -1,32 +1,36 @@
+# Configuration for Doctrine Migrations in Symfony
+
 doctrine_migrations:
     migrations_paths:
-        # Define namespace for migration classes, ensure it is not autoloaded
+        # Define the namespace and path for migration classes.
+        # Ensure this namespace is not part of the autoloading paths.
         'DoctrineMigrations': '%kernel.project_dir%/migrations'
 
-    # Enables the profiler for migrations; set to true for more detailed debugging
+    # Enables the profiler for migrations if the kernel is in debug mode.
     enable_profiler: '%kernel.debug%'
 
-    # Optionally, you can set the table name for tracking migrations
+    # Optionally, specify the table name used to track applied migrations.
     # migrations_table_name: 'migration_versions'
 
-    # Define custom configurations for migrations
+    # Define a custom template for new migration files.
     custom_template: '%kernel.project_dir%/src/Migrations/Template/Migration.tpl.php'
 
-    # Specify the version organization strategy
-    organize_migrations: 'year_and_month' # Other options: 'none', 'year', 'year_and_month'
+    # Organize migrations by year and month for better management.
+    organize_migrations: 'year_and_month'  # Options: 'none', 'year', 'year_and_month'
 
-    # Automatically set the database connection to use
+    # Automatically use the default database connection.
     connection: default
 
-    # Specify a custom namespace for migrations if needed
-    namespaces: ['App\Migrations']
+    # Specify custom namespaces for migrations if required.
+    namespaces:
+        - 'App\Migrations'
 
-    # Ensure the migration script paths are correctly defined
+    # Define paths for migration scripts to ensure correct loading.
     script_paths:
         - '%kernel.project_dir%/migrations'
         - '%kernel.project_dir%/custom_migrations'
 
-    # Optionally, set additional configurations for migrations
+    # Optionally, you can list specific migration versions.
     migrations:
         - 'DoctrineMigrations\Version20230606123000'
         - 'DoctrineMigrations\Version20230606123001'
