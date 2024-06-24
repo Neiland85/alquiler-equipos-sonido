@@ -26,6 +26,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Display PHP version and extensions
+      - name: Display PHP Version
+        run: php -v
+
+      - name: Display Installed PHP Extensions
+        run: php -m
+
       # Copy .env.test.local if it does not exist
       - name: Copy .env.test.local
         run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
