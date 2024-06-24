@@ -1,15 +1,18 @@
+# Symfony Validator configuration
+# For more details, see: https://symfony.com/doc/current/validation.html
+
 framework:
     validation:
-        # Enables validator auto-mapping support.
-        # For instance, basic validation constraints will be inferred from Doctrine's metadata.
+        # Enables validator auto-mapping support for automatic constraint application
         auto_mapping:
             App\Entity\:
                 - validate_property_annotations: true  # Enables validation based on property annotations
+                # Automatically infer validation constraints from Doctrine metadata
 
         # Enable constraint violations to be returned in a structured format
         enable_annotations: true  # Enables validation based on annotations in entity classes
 
-        # Define custom validation paths
+        # Define custom validation paths for additional validation configuration files
         mapping:
             paths:
                 - '%kernel.project_dir%/config/validation'  # Custom path for validation configuration files
@@ -18,13 +21,16 @@ framework:
         groups:
             default: ['Default']
             registration: ['Default', 'Registration']
+            # Different groups allow for context-specific validation rules
 
         # Configure the violation format and message templates
         violation_format: 'array'  # Choose between 'array', 'json', etc.
         violation_messages: 'messages'  # Use custom message templates if available
+        # Customize the format and handling of validation violation messages
 
 when@test:
     framework:
         validation:
             not_compromised_password: false  # Disable checking for compromised passwords during tests
-            cache: false  # Disable validation cache in test environment
+            cache: false  # Disable validation cache in the test environment
+            # This ensures that validation is always fresh during tests
