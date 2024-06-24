@@ -1,21 +1,62 @@
 #!/usr/bin/env php
 <?php
 
+// Importamos las clases necesarias.
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Psr\Log\LoggerInterface;
 
-if (!is_dir(dirname(__DIR__).'/vendor')) {
-    throw new LogicException('Dependencies are missing. Try running "composer install".');
+// Verificamos si las dependencias están instaladas.
+$vendorDir = dirname(__DIR__) . '/vendor';
+if (!is_dir($vendorDir)) {
+    fwrite(STDERR, "Error: El directorio 'vendor' no existe. Por favor, ejecuta 'composer install'.\n");
+    exit(1);
 }
 
-if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
-    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
+require $vendorDir . '/autoload.php';
+
+try {
+    // Iniciamos la aplicación Symfony.
+    $kernel = new Kernel('dev', true); // Cambiar 'dev' por 'prod' en producción.
+    $application = new Application($kernel);
+
+    // Establecemos un handler para capturar errores no gestionados.
+    set_exception_handler(function (Throwable $e) {
+        fwrite(STDERR, "Excepción no gestionada: " . $e->getMessage() . "\n");
+        exit(1);
+    });
+
+    // Ejecución del comando Symfony.
+    $application->run();
+} catch (\Exception $e) {
+    // Logeamos el error y mostramos un mensaje amigable.
+    $logger = $kernel->getContainer()->get('logger');
+    $logger->error('Error crítico: ' . $e->getMessage(), ['exception' => $e]);
+
+    fwrite(STDERR, "Error crítico: " . $e->getMessage() . "\n");
+    exit(1);
 }
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
-
-return function (array $context) {
-    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
-
-    return new Application($kernel);
-};
+/**
+ * Punto de entrada para la consola Symfony.
+ * Se utiliza para ejecutar comandos dentro de la aplicación.
+ *
+ * @param InputInterface $input
+ * @param OutputInterface $output
+ * @param LoggerInterface $logger
+ */
+function runConsole(InputInterface $input, OutputInterface $output, LoggerInterface $logger): void
+{
+    // Ejemplo de cómo se podría extender la funcionalidad.
+    // Aquí se puede manejar la lógica de los comandos.
+    try {
+        // Lógica personalizada para el manejo de comandos.
+        // ...
+    } catch (\Throwable $e) {
+        $logger->error('Error ejecutando comando: ' . $e->getMessage(), ['exception' => $e]);
+        $output->writeln('<error>Error ejecutando comando: ' . $e->getMessage() . '</error>');
+        exit(1);
+    }
+}
