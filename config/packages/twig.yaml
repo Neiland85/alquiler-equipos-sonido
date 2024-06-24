@@ -1,3 +1,6 @@
+# Symfony Twig configuration
+# For more details, see: https://symfony.com/doc/current/reference/configuration/twig.html
+
 twig:
     default_path: '%kernel.project_dir%/templates'  # Default path for Twig templates
     file_name_pattern: '*.twig'  # Pattern to match Twig files
@@ -15,9 +18,10 @@ twig:
     # Configure paths for additional template directories
     paths:
         '%kernel.project_dir%/vendor/symfony/twig-bridge/Resources/views/Form': Form
+        # Additional paths can be added here if needed
 
-    # Optionally, enable auto-reload for templates in development
-    auto_reload: '%kernel.debug%'
+    # Enable auto-reload for templates in development
+    auto_reload: '%kernel.debug%'  # Automatically reload templates if they change
 
 when@test:
     twig:
