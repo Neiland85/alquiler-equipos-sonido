@@ -1,33 +1,55 @@
+# Configuration for Symfony Notifier
+# For more details, see: https://symfony.com/doc/current/notifier.html
+
 framework:
     notifier:
-        # Define transport services for chatter (e.g., Slack, Microsoft Teams)
-        chatter_transports:
-            slack: '%env(SLACK_DSN)%'  # Example transport for Slack
+        # Define the list of channels for notifications
+        channels: ['email', 'sms', 'chat']
 
-        # Define transport services for texter (e.g., SMS, Twilio)
-        texter_transports:
-            twilio: '%env(TWILIO_DSN)%'  # Example transport for Twilio SMS
+        # Email transport configuration
+        email:
+            dsn: '%env(NOTIFIER_EMAIL_DSN)%'
+            sender: '%env(NOTIFIER_EMAIL_SENDER)%'
+            # Configure additional options for email notifications if needed
+            options:
+                reply_to: '%env(NOTIFIER_EMAIL_REPLY_TO)%'
+                priority: 'high'  # Optional: Set email priority
 
-        # Set the notification channel policy based on urgency
-        channel_policy:
-            urgent: ['email', 'slack']
-            high: ['email', 'slack']
-            medium: ['email']
-            low: ['email']
+        # SMS transport configuration
+        sms:
+            dsn: '%env(NOTIFIER_SMS_DSN)%'
+            sender: '%env(NOTIFIER_SMS_SENDER)%'
+            # Example: dsn: 'sms://username:password@smsprovider.example.com'
 
-        # Define the recipients for admin notifications
-        admin_recipients:
-            - { email: admin@example.com }
-            - { email: support@example.com }  # Additional recipient
+        # Chat transport configuration
+        chat:
+            dsn: '%env(NOTIFIER_CHAT_DSN)%'
+            sender: '%env(NOTIFIER_CHAT_SENDER)%'
+            # Example: dsn: 'chat://token@slack.com'
 
-        # Optionally, configure default sender information for notifications
-        default_sender:
-            address: '%env(DEFAULT_SENDER_EMAIL)%'
-            name: 'Alquiler Equipos Notification Service'
+        # Optional: Configure a fallback transport for failed notifications
+        fallback:
+            - email  # Use email as a fallback transport
+            - sms    # SMS as a secondary fallback
+            - chat   # Chat as a tertiary fallback
 
-        # Configure the retry strategy for notification delivery
-        retry_strategy:
-            max_retries: 3
-            delay: 1000  # Delay in milliseconds before retrying
-            multiplier: 2
-            max_delay: 30000  # Max delay of 30 seconds
+        # Optional: Configure custom handlers for specific types of notifications
+        handlers:
+            # Define a handler for critical notifications
+            critical_handler:
+                transport: email
+                level: critical
+                channels: ['sms', 'email']  # Send critical notifications via SMS and email
+
+            # Define a handler for warning notifications
+            warning_handler:
+                transport: email
+                level: warning
+                channels: ['email']  # Send warnings only via email
+
+        # Optional: Define transport failure strategies
+        failure_strategies:
+            retry:
+                max_retries: 3  # Retry failed notifications up to 3 times
+                delay: 5000     # Delay between retries in milliseconds
+                exponential_backoff: true  # Use exponential backoff strategy
