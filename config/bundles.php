@@ -39,7 +39,4 @@ return [
     
     // Sensio framework extra bundle for additional framework functionality.
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true], // Added for additional framework functionality
-    
-    // Swiftmailer bundle for email support.
-    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true], // Added for email support
 ];
