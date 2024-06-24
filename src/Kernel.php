@@ -22,14 +22,14 @@ class Kernel extends BaseKernel
     protected function configureContainer(ContainerBuilder $containerBuilder, LoaderInterface $loader): void
     {
         $configDir = $this->getProjectDir() . '/config';
-        
+
         try {
             // Load global configuration
-            $loader->load($configDir . '/packages/*.{php,yaml}', 'glob');
-            $loader->load($configDir . '/services.yaml');
+            $loader->load("$configDir/packages/*.{php,yaml}", 'glob');
+            $loader->load("$configDir/services.yaml");
             
             // Load environment-specific configuration
-            $loader->load($configDir . '/packages/' . $this->environment . '/*.{php,yaml}', 'glob');
+            $loader->load("$configDir/packages/{$this->environment}/*.{php,yaml}", 'glob');
         } catch (LoaderLoadException $e) {
             fwrite(STDERR, "Error loading configuration: " . $e->getMessage() . "\n");
             exit(1);
@@ -44,13 +44,13 @@ class Kernel extends BaseKernel
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $configDir = $this->getProjectDir() . '/config';
-        
+
         try {
             // Load global routes
-            $routes->import($configDir . '/routes/*.{php,yaml}', 'glob');
+            $routes->import("$configDir/routes/*.{php,yaml}", 'glob');
             
             // Load environment-specific routes
-            $routes->import($configDir . '/routes/' . $this->environment . '/*.{php,yaml}', 'glob');
+            $routes->import("$configDir/routes/{$this->environment}/*.{php,yaml}", 'glob');
         } catch (LoaderLoadException $e) {
             fwrite(STDERR, "Error loading routes: " . $e->getMessage() . "\n");
             exit(1);
@@ -74,7 +74,7 @@ class Kernel extends BaseKernel
      */
     public function getCacheDir(): string
     {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment;
+        return $this->getProjectDir() . "/var/cache/{$this->environment}";
     }
 
     /**
