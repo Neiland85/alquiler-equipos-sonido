@@ -1,39 +1,57 @@
+# Configuration for Symfony Messenger
+# For more details, see: https://symfony.com/doc/current/messenger.html
+
 framework:
     messenger:
-        failure_transport: failed
+        failure_transport: failed  # Define the transport to be used for failed messages
 
         transports:
             # Asynchronous transport configuration
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    use_notify: true
+                    use_notify: true  # Use NOTIFY for efficient delayed message handling
                     check_delayed_interval: 60000  # Check for delayed messages every 60 seconds
                 retry_strategy:
                     max_retries: 5  # Increased maximum retries to 5
-                    multiplier: 2
-                    max_delay: 600000  # Max delay set to 10 minutes
-                    delay: 1000  # Initial delay of 1 second
-            # Failed messages transport
+                    multiplier: 2  # Exponential backoff multiplier for retries
+                    max_delay: 600000  # Max delay set to 10 minutes for retry
+                    delay: 1000  # Initial delay of 1 second before retry
+
+            # Transport for failed messages
             failed: 'doctrine://default?queue_name=failed'
-            
+            # Use Doctrine transport for storing failed messages
+
             # Uncomment to enable synchronous transport for debugging purposes
             # sync: 'sync://'
 
-        default_bus: messenger.bus.default
+        default_bus: messenger.bus.default  # Set the default message bus
 
         buses:
+            # Default bus for general messages
             messenger.bus.default: []
-            messenger.bus.commands: []  # Added separate bus for command messages
-            messenger.bus.events: []    # Added separate bus for event messages
+
+            # Separate bus for command messages
+            messenger.bus.commands: []
+            # Helps in segregating command messages for better control
+
+            # Separate bus for event messages
+            messenger.bus.events: []
+            # Helps in handling event messages separately for better clarity
 
         routing:
+            # Route SendEmailMessage to the async transport
             Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            
+            # Route ChatMessage to the async transport
             Symfony\Component\Notifier\Message\ChatMessage: async
+            
+            # Route SmsMessage to the async transport
             Symfony\Component\Notifier\Message\SmsMessage: async
 
-            # Route your messages to the transports
+            # Route custom messages to specific transports
+            # Uncomment and configure as needed
             # 'App\Message\YourMessage': async
 
-            # Example: Custom message routing
-            # 'App\Message\ImportantNotification': [async, sync]  # Route to both async and sync transports
+            # Example: Route important notifications to both async and sync transports
+            # 'App\Message\ImportantNotification': [async, sync]
