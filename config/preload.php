@@ -6,20 +6,36 @@ $prodPreloadPath = $projectDir . '/var/cache/prod/App_KernelProdContainer.preloa
 $devPreloadPath = $projectDir . '/var/cache/dev/App_KernelDevContainer.preload.php';
 
 try {
-    if (is_readable($prodPreloadPath)) {
-        require $prodPreloadPath;
-    } elseif (is_readable($devPreloadPath)) {
-        require $devPreloadPath;
-    } else {
-        throw new RuntimeException('Preload file not found or unreadable. Ensure the cache is properly generated.');
-    }
+    // Attempt to require the preload file from the production cache
+    requirePreloadFile($prodPreloadPath);
 } catch (RuntimeException $e) {
-    error_log('Error: ' . $e->getMessage());
-    // Optionally, you can add more actions here like sending an alert to admins
+    try {
+        // If production file is not available, attempt the development cache
+        requirePreloadFile($devPreloadPath);
+    } catch (RuntimeException $e) {
+        // Log the error and optionally handle further actions like notifications
+        error_log('Error: ' . $e->getMessage());
+        // Example: sendAlertToAdmins($e->getMessage());
+    }
 }
 
 /**
- * Validates that the file is both existent and readable.
+ * Attempts to require the preload file if it exists and is readable.
+ *
+ * @param string $filePath
+ * @throws RuntimeException if the file is not found or unreadable
+ */
+function requirePreloadFile(string $filePath): void
+{
+    if (validateFile($filePath)) {
+        require $filePath;
+    } else {
+        throw new RuntimeException("Preload file at '$filePath' not found or unreadable. Ensure the cache is properly generated.");
+    }
+}
+
+/**
+ * Validates that the file exists and is readable.
  *
  * @param string $filePath
  * @return bool
