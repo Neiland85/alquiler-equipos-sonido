@@ -6,35 +6,82 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Config\Exception\LoaderLoadException;
 
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected function configureContainer(ContainerBuilder $containerBuilder, LoaderInterface $loader)
+    /**
+     * Configures the service container.
+     *
+     * @param ContainerBuilder $containerBuilder
+     * @param LoaderInterface $loader
+     */
+    protected function configureContainer(ContainerBuilder $containerBuilder, LoaderInterface $loader): void
     {
-        $loader->load($this->getProjectDir() . '/config/packages/*.{php,yaml}', 'glob');
-        $loader->load($this->getProjectDir() . '/config/services.yaml');
-        $loader->load($this->getProjectDir() . '/config/packages/' . $this->environment . '/*.{php,yaml}', 'glob');
+        $configDir = $this->getProjectDir() . '/config';
+        
+        try {
+            // Load global configuration
+            $loader->load($configDir . '/packages/*.{php,yaml}', 'glob');
+            $loader->load($configDir . '/services.yaml');
+            
+            // Load environment-specific configuration
+            $loader->load($configDir . '/packages/' . $this->environment . '/*.{php,yaml}', 'glob');
+        } catch (LoaderLoadException $e) {
+            fwrite(STDERR, "Error loading configuration: " . $e->getMessage() . "\n");
+            exit(1);
+        }
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    /**
+     * Configures the application routes.
+     *
+     * @param RoutingConfigurator $routes
+     */
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import($this->getProjectDir() . '/config/routes/*.{php,yaml}', '/', 'glob');
-        $routes->import($this->getProjectDir() . '/config/routes/' . $this->environment . '/*.{php,yaml}', '/', 'glob');
+        $configDir = $this->getProjectDir() . '/config';
+        
+        try {
+            // Load global routes
+            $routes->import($configDir . '/routes/*.{php,yaml}', 'glob');
+            
+            // Load environment-specific routes
+            $routes->import($configDir . '/routes/' . $this->environment . '/*.{php,yaml}', 'glob');
+        } catch (LoaderLoadException $e) {
+            fwrite(STDERR, "Error loading routes: " . $e->getMessage() . "\n");
+            exit(1);
+        }
     }
 
+    /**
+     * Returns the project directory.
+     *
+     * @return string
+     */
     public function getProjectDir(): string
     {
         return dirname(__DIR__);
     }
 
+    /**
+     * Returns the cache directory.
+     *
+     * @return string
+     */
     public function getCacheDir(): string
     {
         return $this->getProjectDir() . '/var/cache/' . $this->environment;
     }
 
+    /**
+     * Returns the log directory.
+     *
+     * @return string
+     */
     public function getLogDir(): string
     {
         return $this->getProjectDir() . '/var/log';
