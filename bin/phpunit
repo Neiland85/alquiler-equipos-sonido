@@ -1,27 +1,64 @@
 #!/usr/bin/env php
 <?php
 
+// Set default timezone if not already set.
 if (!ini_get('date.timezone')) {
     ini_set('date.timezone', 'UTC');
 }
 
-$phpunitPath = dirname(__DIR__).'/vendor/phpunit/phpunit/phpunit';
-$simplePhpunitPath = dirname(__DIR__).'/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
+// Define paths for PHPUnit and Symfony's PHPUnit Bridge.
+$phpunitPath = dirname(__DIR__) . '/vendor/phpunit/phpunit/phpunit';
+$simplePhpunitPath = dirname(__DIR__) . '/vendor/symfony/phpunit-bridge/bin/simple-phpunit.php';
 
-if (is_file($phpunitPath)) {
-    // For PHP 8.0 and above, use the PHPUnit directly
-    if (PHP_VERSION_ID >= 80000) {
-        require $phpunitPath;
+// Check if PHPUnit is available and choose the appropriate script to run.
+try {
+    if (is_file($phpunitPath)) {
+        // For PHP 8.0 and above, use PHPUnit directly.
+        if (PHP_VERSION_ID >= 80000) {
+            require $phpunitPath;
+        } else {
+            // Use the standard autoload for older PHP versions.
+            define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__) . '/vendor/autoload.php');
+            require PHPUNIT_COMPOSER_INSTALL;
+            PHPUnit\TextUI\Command::main();
+        }
+    } elseif (is_file($simplePhpunitPath)) {
+        // Use Symfony's PHPUnit Bridge if available.
+        require $simplePhpunitPath;
     } else {
-        // Use the standard autoload for older PHP versions
-        define('PHPUNIT_COMPOSER_INSTALL', dirname(__DIR__).'/vendor/autoload.php');
-        require PHPUNIT_COMPOSER_INSTALL;
-        PHPUnit\TextUI\Command::main();
+        // Error message if neither PHPUnit nor the bridge is available.
+        fwrite(STDERR, "Unable to find PHPUnit. Please run `composer require --dev phpunit/phpunit` or `composer require --dev symfony/phpunit-bridge`.\n");
+        exit(1);
     }
-} elseif (is_file($simplePhpunitPath)) {
-    // Use Symfony's PHPUnit Bridge if available
-    require $simplePhpunitPath;
-} else {
-    echo "Unable to find PHPUnit. Please run `composer require --dev phpunit/phpunit` or `composer require --dev symfony/phpunit-bridge`.\n";
+} catch (Throwable $e) {
+    // Log and display the error.
+    fwrite(STDERR, "Error: " . $e->getMessage() . "\n");
     exit(1);
 }
+
+/**
+ * Entry point for running PHPUnit commands.
+ * This script selects and runs the appropriate PHPUnit binary
+ * based on the current PHP version and available dependencies.
+ */
+function runPhpUnit(): void
+{
+    global $phpunitPath, $simplePhpunitPath;
+
+    try {
+        if (is_file($phpunitPath)) {
+            require $phpunitPath;
+        } elseif (is_file($simplePhpunitPath)) {
+            require $simplePhpunitPath;
+        } else {
+            fwrite(STDERR, "PHPUnit not found. Ensure it is installed with Composer.\n");
+            exit(1);
+        }
+    } catch (Throwable $e) {
+        fwrite(STDERR, "Error executing PHPUnit: " . $e->getMessage() . "\n");
+        exit(1);
+    }
+}
+
+// Execute the function to run PHPUnit.
+runPhpUnit();
