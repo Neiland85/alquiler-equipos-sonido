@@ -16,7 +16,8 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
     private $_usedProperties = [];
 
     /**
-     * @default false
+     * Enable or disable the toolbar.
+     *
      * @param ParamConfigurator|bool $value
      * @return $this
      */
@@ -29,7 +30,8 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
     }
 
     /**
-     * @default false
+     * Enable or disable intercepting of redirects.
+     *
      * @param ParamConfigurator|bool $value
      * @return $this
      */
@@ -42,7 +44,8 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
     }
 
     /**
-     * @default '^/((index|app(_[\\w]+)?)\\.php/)?_wdt'
+     * Specify paths to exclude from AJAX profiling.
+     *
      * @param ParamConfigurator|mixed $value
      * @return $this
      */
@@ -54,11 +57,22 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
         return $this;
     }
 
+    /**
+     * Get the alias for this configuration.
+     *
+     * @return string
+     */
     public function getExtensionAlias(): string
     {
         return 'web_profiler';
     }
 
+    /**
+     * Constructor for WebProfilerConfig.
+     *
+     * @param array $value Initial configuration values.
+     * @throws InvalidConfigurationException When an unsupported key is provided.
+     */
     public function __construct(array $value = [])
     {
         if (array_key_exists('toolbar', $value)) {
@@ -84,6 +98,11 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
         }
     }
 
+    /**
+     * Convert the configuration to an array.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $output = [];
@@ -99,5 +118,4 @@ class WebProfilerConfig implements \Symfony\Component\Config\Builder\ConfigBuild
 
         return $output;
     }
-
 }
