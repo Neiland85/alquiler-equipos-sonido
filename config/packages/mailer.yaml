@@ -1,25 +1,36 @@
+# Configuration for Symfony Mailer
+# For more details, see: https://symfony.com/doc/current/mailer.html
+
 framework:
     mailer:
         # The DSN (Data Source Name) for the mailer service
         dsn: '%env(MAILER_DSN)%'
+        # Example: smtp://username:password@smtp.example.com:587
+        # Ensure this is set in your environment variables for security.
 
         # Optional: Configure the default sender address
         default_sender:
             address: '%env(DEFAULT_SENDER_EMAIL)%'
             name: '%env(DEFAULT_SENDER_NAME)%'
+            # Example: address: 'no-reply@alquilerequipodesonido.com'
+            # name: 'Alquiler Equipos Sonido'
 
         # Optional: Enable asynchronous sending
-        async: false  # Set to true to enable async sending
+        async: false  # Set to true to enable asynchronous sending
+        # This allows email sending to be processed in the background, improving application responsiveness.
 
         # Optional: Configure the failed recipients logging
         failure:
             log_failed_recipients: true
+            # Logs recipients who fail to receive emails, useful for troubleshooting.
 
         # Optional: Set default transport options
         transport_options:
             tls: true  # Use TLS for secure email transport
+            # Ensures emails are sent securely using Transport Layer Security.
 
         # Optional: Add custom headers for all emails
         headers:
             X-Mailer: 'AlquilerEquiposMailer'
             X-Priority: '1'  # Set email priority
+            # Custom headers can be added for additional email metadata.
