@@ -5,16 +5,15 @@
  * by the Symfony Routing Component.
  * 
  * It contains the mappings for static and dynamic routes,
- * as well as any regular expressions used for dynamic route matching.
+ * as well as regular expressions used for dynamic route matching.
  */
 
 return [
-    // Indicates whether to match the host.
+    // Indicates whether to match the host in route matching.
     false, // $matchHost
 
     // Static routes configuration
     [ // $staticRoutes
-        // Route to the profiler home page
         '/_profiler' => [
             [
                 '_route' => '_profiler_home',
@@ -22,7 +21,6 @@ return [
             ],
             null, null, null, true, false, null
         ],
-        // Route to the profiler search
         '/_profiler/search' => [
             [
                 '_route' => '_profiler_search',
@@ -30,7 +28,6 @@ return [
             ],
             null, null, null, false, false, null
         ],
-        // Route to the profiler search bar
         '/_profiler/search_bar' => [
             [
                 '_route' => '_profiler_search_bar',
@@ -38,7 +35,6 @@ return [
             ],
             null, null, null, false, false, null
         ],
-        // Route to the PHP info page
         '/_profiler/phpinfo' => [
             [
                 '_route' => '_profiler_phpinfo',
@@ -46,7 +42,6 @@ return [
             ],
             null, null, null, false, false, null
         ],
-        // Route to the Xdebug page
         '/_profiler/xdebug' => [
             [
                 '_route' => '_profiler_xdebug',
@@ -54,7 +49,6 @@ return [
             ],
             null, null, null, false, false, null
         ],
-        // Route to open profiler files
         '/_profiler/open' => [
             [
                 '_route' => '_profiler_open_file',
@@ -66,7 +60,6 @@ return [
 
     // Regular expressions used for dynamic route matching
     [ // $regexpList
-        // Regular expression to match dynamic routes
         0 => '{^(?'
             .'|/_(?'
                 .'|error/(\\d+)(?:\\.([^/]++))?(*:38)' // Matches /_error/{code}.{format}
@@ -91,7 +84,6 @@ return [
 
     // Dynamic routes configuration
     [ // $dynamicRoutes
-        // Route to preview error pages
         38 => [
             [
                 '_route' => '_preview_error',
@@ -100,7 +92,6 @@ return [
             ],
             ['code', '_format'], null, null, false, true, null
         ],
-        // Route to the web debug toolbar
         57 => [
             [
                 '_route' => '_wdt',
@@ -108,10 +99,52 @@ return [
             ],
             ['token'], null, null, false, true, null
         ],
-        // Route to profiler fonts
         98 => [
             [
                 '_route' => '_profiler_font',
                 '_controller' => 'web_profiler.controller.profiler::fontAction'
             ],
-            ['fontName'], null, null, false, false,Vamos a mejorar el script auto-generado por
+            ['fontName'], null, null, false, false, null
+        ],
+        134 => [
+            [
+                '_route' => '_profiler_search_results',
+                '_controller' => 'web_profiler.controller.profiler::searchResultsAction'
+            ],
+            ['token'], null, null, false, false, null
+        ],
+        148 => [
+            [
+                '_route' => '_profiler_router',
+                '_controller' => 'web_profiler.controller.router::panelAction'
+            ],
+            ['token'], null, null, false, false, null
+        ],
+        168 => [
+            [
+                '_route' => '_profiler_exception',
+                '_controller' => 'web_profiler.controller.exception_panel::body'
+            ],
+            ['token'], null, null, false, false, null
+        ],
+        181 => [
+            [
+                '_route' => '_profiler_exception_css',
+                '_controller' => 'web_profiler.controller.exception_panel::stylesheet'
+            ],
+            ['token'], null, null, false, false, null
+        ],
+        191 => [
+            [
+                '_route' => '_profiler',
+                '_controller' => 'web_profiler.controller.profiler::panelAction'
+            ],
+            ['token'], null, null, false, true, null
+        ],
+        // Additional dynamic route example
+        // Add more routes as needed
+    ],
+
+    // Condition to check for additional routing constraints
+    null, // $checkCondition
+];
