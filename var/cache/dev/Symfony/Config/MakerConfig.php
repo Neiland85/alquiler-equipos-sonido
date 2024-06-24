@@ -14,6 +14,8 @@ class MakerConfig implements \Symfony\Component\Config\Builder\ConfigBuilderInte
     private $_usedProperties = [];
 
     /**
+     * Set the root namespace for the Maker bundle.
+     *
      * @default 'App'
      * @param ParamConfigurator|mixed $value
      * @return $this
@@ -26,11 +28,22 @@ class MakerConfig implements \Symfony\Component\Config\Builder\ConfigBuilderInte
         return $this;
     }
 
+    /**
+     * Get the extension alias for the Maker bundle.
+     *
+     * @return string
+     */
     public function getExtensionAlias(): string
     {
         return 'maker';
     }
 
+    /**
+     * Constructor for the MakerConfig class.
+     *
+     * @param array $value
+     * @throws InvalidConfigurationException
+     */
     public function __construct(array $value = [])
     {
         if (array_key_exists('root_namespace', $value)) {
@@ -39,11 +52,20 @@ class MakerConfig implements \Symfony\Component\Config\Builder\ConfigBuilderInte
             unset($value['root_namespace']);
         }
 
-        if ([] !== $value) {
-            throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
+        if (!empty($value)) {
+            throw new InvalidConfigurationException(sprintf(
+                'The following keys are not supported by "%s": %s',
+                __CLASS__,
+                implode(', ', array_keys($value))
+            ));
         }
     }
 
+    /**
+     * Convert the configuration to an array.
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $output = [];
@@ -53,5 +75,4 @@ class MakerConfig implements \Symfony\Component\Config\Builder\ConfigBuilderInte
 
         return $output;
     }
-
 }
