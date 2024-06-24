@@ -1,22 +1,28 @@
+# Symfony Translation configuration
+# For more details, see: https://symfony.com/doc/current/translation.html
+
 framework:
-    default_locale: en
+    default_locale: en  # Default locale for the application
     translator:
         default_path: '%kernel.project_dir%/translations'
-        fallbacks:
-            - en  # Fallback to English if a translation is not found
-            - es  # Additional fallback to Spanish
+        # Path where translation files are stored
 
-        # Optionally, define translation providers if you are using external services
+        fallbacks:
+            - en  # Primary fallback to English if a translation is not found
+            - es  # Secondary fallback to Spanish
+
+        # Define translation providers if using external translation services
         providers:
             google_translate:
-                dsn: '%env(GOOGLE_TRANSLATE_DSN)%'  # Example for Google Translate
+                dsn: '%env(GOOGLE_TRANSLATE_DSN)%'
                 api_key: '%env(GOOGLE_TRANSLATE_API_KEY)%'
+                # Example configuration for Google Translate as a provider
+
             deepl:
-                dsn: '%env(DEEPL_DSN)%'  # Example for DeepL
+                dsn: '%env(DEEPL_DSN)%'
                 api_key: '%env(DEEPL_API_KEY)%'
+                # Example configuration for DeepL as a provider
 
-        # Define the locales that your application supports
-        locales: ['en', 'es', 'fr']  # English, Spanish, French
+        locales: ['en', 'es', 'fr']  # Supported locales: English, Spanish, French
 
-        # Enable or disable the debug mode for translations
-        debug: '%kernel.debug%'
+        debug: '%kernel.debug%'  # Enable translation debug mode in debug environment
