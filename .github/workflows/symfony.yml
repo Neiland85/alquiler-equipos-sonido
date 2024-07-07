@@ -1,3 +1,16 @@
+
+Parece que el error en el workflow de GitHub Actions está relacionado con que no se encuentra el archivo package.json en la ruta especificada. Aquí hay algunas posibles soluciones:
+
+Verificar la Estructura del Repositorio:
+Asegúrate de que el archivo package.json esté en la raíz del repositorio o en la ruta correcta especificada en el workflow.
+
+Actualizar el Workflow:
+Ajustar la ruta de package.json si está en un subdirectorio.
+
+Ejemplo de Workflow Actualizado:
+
+yaml
+Copiar código
 name: CI Workflow
 
 on: [push, pull_request]
@@ -8,14 +21,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+      
       - name: Install dependencies
-        run: npm install
+        run: cd alquiler-equipos-sonido && npm install
+      
       - name: Run tests
-        run: npm test
+        run: cd alquiler-equipos-sonido && npm test
 
   cleanup:
     runs-on: ubuntu-latest
@@ -23,6 +39,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
       - name: Clean up
         run: |
           echo "Cleaning up temporary files..."
